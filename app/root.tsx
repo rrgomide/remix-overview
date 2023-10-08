@@ -9,6 +9,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from '@remix-run/react'
+import { Dashboard } from './components'
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : []),
@@ -17,18 +18,24 @@ export const links: LinksFunction = () => [
 
 export default function App() {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
+        <link rel="stylesheet" href="https://rsms.me/inter/inter.css"></link>
         <Links />
       </head>
-      <body>
-        <Outlet />
+      <body className="h-full overflow-y-scroll">
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
+
+        <Dashboard>
+          <div className="p-2">
+            <Outlet />
+          </div>
+        </Dashboard>
       </body>
     </html>
   )

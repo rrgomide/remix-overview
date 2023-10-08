@@ -7,18 +7,6 @@ export const meta: MetaFunction = () => {
   ]
 }
 
-function MainTitle() {
-  return (
-    <h1 className="text-red-900 font-semibold text-center text-4xl">
-      Remix Overview
-    </h1>
-  )
-}
-
 export default function Index() {
-  return (
-    <div className="p-2">
-      <MainTitle />
-    </div>
-  )
+  return <p>Remix is awesome!</p>
 }
