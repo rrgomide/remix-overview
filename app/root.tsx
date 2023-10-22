@@ -9,7 +9,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from '@remix-run/react'
-import { Dashboard } from './components'
+import { Navbar } from './components'
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : []),
@@ -31,11 +31,11 @@ export default function App() {
         <Scripts />
         <LiveReload />
 
-        <Dashboard>
+        <Navbar>
           <div className="p-2">
             <Outlet />
           </div>
-        </Dashboard>
+        </Navbar>
       </body>
     </html>
   )
