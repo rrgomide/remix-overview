@@ -12,10 +12,10 @@
   "dependencies": {
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
-    "@remix-run/css-bundle": "^2.0.1",
-    "@remix-run/node": "^2.0.1",
-    "@remix-run/react": "^2.0.1",
-    "@remix-run/serve": "^2.0.1",
+    "@remix-run/css-bundle": "2.1.0",
+    "@remix-run/node": "2.1.0",
+    "@remix-run/react": "2.1.0",
+    "@remix-run/serve": "2.1.0",
     "clsx": "^2.0.0",
     "isbot": "^3.6.8",
     "react": "^18.2.0",
@@ -23,8 +23,8 @@
     "tailwind-merge": "^1.14.0"
   },
   "devDependencies": {
-    "@remix-run/dev": "^2.0.1",
-    "@remix-run/eslint-config": "^2.0.1",
+    "@remix-run/dev": "2.1.0",
+    "@remix-run/eslint-config": "2.1.0",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "eslint": "^8.38.0",
