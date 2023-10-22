@@ -17,13 +17,13 @@ const navigation = [
   },
 ]
 
-//TODO 1 - Better Navigation with Remix
+//TODO 1 - Improve Navigation
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function NavigationWithRemix() {
-  return
+function RemixNavigationItem() {
+  return null
 }
 
-function NavigationWithoutRemix({
+function NavigationItem({
   href,
   isCurrentRoute,
   children,
@@ -43,7 +43,6 @@ function NavigationWithoutRemix({
           : 'border-transparent text-gray-500',
         'hover:border-gray-300 hover:text-gray-700'
       )}
-      aria-current={isCurrentRoute ? 'page' : undefined}
     >
       {children}
     </a>
@@ -71,13 +70,13 @@ export function Navbar({ children }: { children: React.ReactNode }) {
                 <div className="flex flex-row items-center justify-start space-x-8 ml-6">
                   {navigation.map(item => {
                     return (
-                      <NavigationWithoutRemix
+                      <NavigationItem
                         key={item.name}
                         href={item.href}
                         isCurrentRoute={item.href === currentPathname}
                       >
                         {item.name}
-                      </NavigationWithoutRemix>
+                      </NavigationItem>
                     )
                   })}
                 </div>
