@@ -5,7 +5,7 @@ type DescriptionListItem = {
   description: string
 }
 
-export default function DescriptionList({
+export function DescriptionList({
   headerTitle,
   headerDescription,
   items,
@@ -27,7 +27,7 @@ export default function DescriptionList({
       <div className="mt-6 border-t border-gray-100">
         <dl className="divide-y divide-gray-100">
           {items.map((item, index) => {
-            const bgColor = index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
+            const bgColor = index % 2 === 1 ? 'bg-white' : 'bg-gray-100'
 
             return (
               <div
