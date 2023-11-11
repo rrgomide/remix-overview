@@ -8,12 +8,12 @@ const navigation = [
     href: '/',
   },
   {
-    name: 'Basics',
-    href: '/basics',
+    name: "Let's Code",
+    href: '/lets-code',
   },
   {
-    name: 'Awesome Features',
-    href: '/features',
+    name: 'Thanks!',
+    href: '/thanks',
   },
 ]
 

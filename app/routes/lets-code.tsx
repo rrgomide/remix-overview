@@ -321,8 +321,8 @@ function FlashCard({
   )
 }
 
-//TODO: make this a real Remix Route with loader/action
-function FlashCards() {
+export default function LetsCodeRoute() {
+  //TODO: make this a real Remix Route with loader/action
   const { flashCards, loading, error, add, update, remove } = useFlashCards()
 
   if (loading) {
@@ -339,7 +339,7 @@ function FlashCards() {
 
   return (
     <div className="w-[62rem]">
-      <Subtitle classNames="text-xl m-4">Flash Cards</Subtitle>
+      <Subtitle className="text-xl m-4">Flash Cards</Subtitle>
 
       <ul>
         {flashCards.map(flashCard => {
@@ -364,14 +364,5 @@ function FlashCards() {
         }}
       />
     </div>
-  )
-}
-
-export default function BasicsRoute() {
-  return (
-    <>
-      <Subtitle>Basics</Subtitle>
-      <FlashCards />
-    </>
   )
 }

@@ -12,7 +12,7 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   return (
     <>
-      <Subtitle>Intro</Subtitle>
+      <Subtitle className="mb-4">Intro</Subtitle>
 
       <BorderedContainer>
         <DescriptionList
