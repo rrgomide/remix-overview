@@ -1,10 +1,11 @@
+import React from 'react'
 import { cn } from '~/utils'
 
 export function Subtitle({
   children,
   className,
 }: {
-  children: string
+  children: string | React.ReactNode
   className?: string
 }) {
   return (

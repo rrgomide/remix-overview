@@ -4,33 +4,33 @@
       "id": "a4b0b2a0-5b0a-4b0e-8b0a-5b0a4b0e8b0a",
       "question": "Who's Dream Theater's guitarrist?",
       "answer": "🎸 John Petruci",
-      "learned": false,
+      "learned": "true",
       "createdAt": "2023-10-11T00:00:00.000Z",
-      "updatedAt": "2023-10-11T00:00:00.000Z"
+      "updatedAt": "2023-11-11T21:45:37.670Z"
     },
     {
       "id": "a039b059-504c-4007-a5b3-9750277b70a6",
       "question": "What's Transatlantic's longest song?",
       "answer": "⏳️ The Whirlwind",
-      "learned": false,
+      "learned": "true",
       "createdAt": "2020-10-12T00:00:00.000Z",
-      "updatedAt": "2020-10-12T00:00:00.000Z"
+      "updatedAt": "2023-11-11T21:45:36.323Z"
     },
     {
       "id": "ef0d60e8-23c4-45f7-8078-b28c884d9022",
       "question": "Who's in both in NMB and The Winery Dogs?",
       "answer": "🥁 Mike Portnoy",
-      "learned": false,
+      "learned": "true",
       "createdAt": "2020-10-13T00:00:00.000Z",
-      "updatedAt": "2020-10-13T00:00:00.000Z"
+      "updatedAt": "2023-11-11T21:45:36.698Z"
     },
     {
       "id": "a0e6d190-3d54-4035-b050-b0bcf7d5bf19",
       "question": "What's Rush's Geddy Lee's main instrument?",
       "answer": "🎻 Bass",
-      "learned": false,
+      "learned": "true",
       "createdAt": "2020-10-14T00:00:00.000Z",
-      "updatedAt": "2020-10-14T00:00:00.000Z"
+      "updatedAt": "2023-11-11T21:45:37.256Z"
     }
   ]
 }

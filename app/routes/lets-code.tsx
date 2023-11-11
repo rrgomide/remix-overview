@@ -9,21 +9,18 @@ type FlashCard = {
   id: string
   question: string
   answer: string
-  learned: boolean
+  learned: string
   createdAt: string
   updatedAt: string
 }
 
-type Mode = 'new' | 'edit'
-
-type FlashCardWithoutId = Omit<FlashCard, 'id'>
-type FlashCardEdit = Omit<FlashCard, 'learned' | 'createdAt'>
+type FlashCardToAdd = Omit<FlashCard, 'id' | 'createdAt' | 'updatedAt'>
+type FlashCardToEdit = Omit<FlashCard, 'updatedAt'>
 
 function useFlashCards() {
   const [flashCards, setFlashCards] = React.useState<FlashCard[]>([])
   const [loading, setLoading] = React.useState(true)
   const [error, setError] = React.useState<string | null>(null)
-  const [mode, setMode] = React.useState<'new' | 'edit'>('new')
 
   React.useEffect(() => {
     setLoading(true)
@@ -44,16 +41,23 @@ function useFlashCards() {
       })
   }, [])
 
-  const add = React.useCallback(
-    (newFlashCard: FlashCardWithoutId) => {
-      const fullNewFlashCard: FlashCard = { ...newFlashCard, id: getNewUuid() }
+  const doAdd = React.useCallback(
+    (newFlashCard: FlashCardToAdd) => {
+      const now = new Date().toISOString()
+
+      const fullNewFlashCard: FlashCard = {
+        id: getNewUuid(),
+        ...newFlashCard,
+        createdAt: now,
+        updatedAt: now,
+      }
 
       fetch(`${backendBaseUrl}/flash-cards`, {
         method: 'POST',
+        body: JSON.stringify(fullNewFlashCard),
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(fullNewFlashCard),
       })
         .then(() => {
           setFlashCards([...flashCards, fullNewFlashCard])
@@ -65,7 +69,43 @@ function useFlashCards() {
     [flashCards]
   )
 
-  const remove = React.useCallback(
+  const doUpdate = React.useCallback(
+    (updatedFlashCard: FlashCardToEdit) => {
+      console.log('🔥  updatedFlashCard:', updatedFlashCard)
+
+      const fullUpdatedFlashCard = {
+        ...updatedFlashCard,
+        updatedAt: new Date().toISOString(),
+      }
+
+      fetch(`${backendBaseUrl}/flash-cards/${updatedFlashCard.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(fullUpdatedFlashCard),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(() => {
+          setFlashCards(
+            flashCards.map(currentFlashCard =>
+              currentFlashCard.id === updatedFlashCard.id
+                ? {
+                    ...currentFlashCard,
+                    ...updatedFlashCard,
+                    updatedAt: new Date().toISOString(),
+                  }
+                : { ...currentFlashCard }
+            )
+          )
+        })
+        .catch(error => {
+          setError((error as Error).message)
+        })
+    },
+    [flashCards]
+  )
+
+  const doRemove = React.useCallback(
     (flashCardId: string) => {
       fetch(`${backendBaseUrl}/flash-cards/${flashCardId}`, {
         method: 'DELETE',
@@ -82,52 +122,20 @@ function useFlashCards() {
     [flashCards]
   )
 
-  const update = React.useCallback(
-    (updatedFlashCard: FlashCardEdit) => {
-      fetch(`${backendBaseUrl}/flash-cards/${updatedFlashCard.id}`, {
-        method: 'PUT',
-        body: JSON.stringify(updatedFlashCard),
-      })
-        .then(resource => resource.json())
-        .then(() => {
-          setFlashCards(
-            flashCards.map(currentFlashCard =>
-              currentFlashCard.id === updatedFlashCard.id
-                ? { ...currentFlashCard, ...updatedFlashCard }
-                : { ...currentFlashCard }
-            )
-          )
-        })
-        .catch(error => {
-          setError((error as Error).message)
-        })
-    },
-    [flashCards]
-  )
-
-  const toggleMode = React.useCallback(
-    (newMode: Mode | null) => {
-      setMode(newMode ? newMode : mode === 'new' ? 'edit' : 'new')
-    },
-    [mode]
-  )
-
   return {
     flashCards,
-    error,
     loading,
-    add,
-    remove,
-    update,
-    mode,
-    toggleMode,
+    error,
+    doAdd,
+    doRemove,
+    doUpdate,
   }
 }
 
 function NewFlashCard({
   onNew,
 }: {
-  onNew: (newFlashCard: FlashCardWithoutId) => void
+  onNew: (newFlashCard: FlashCardToAdd) => void
 }) {
   const inputQuestionRef = React.useRef<HTMLInputElement | null>(null)
   const inputAnswerRef = React.useRef<HTMLInputElement | null>(null)
@@ -146,14 +154,10 @@ function NewFlashCard({
       return
     }
 
-    const now = new Date().toISOString()
-
     onNew({
       question: inputQuestionRef.current?.value ?? '',
       answer: inputAnswerRef.current?.value ?? '',
-      learned: false,
-      createdAt: now,
-      updatedAt: now,
+      learned: 'false',
     })
 
     if (inputQuestionRef.current && inputAnswerRef.current) {
@@ -208,7 +212,7 @@ function FlashCard({
 }: {
   children: FlashCard
   onRemove: (id: string) => void
-  onSave: (editFields: FlashCardEdit) => void
+  onSave: (editFields: FlashCardToEdit) => void
 }) {
   const [isVisible, setIsVisible] = React.useState(false)
   const [editMode, setEditMode] = React.useState(false)
@@ -223,6 +227,16 @@ function FlashCard({
 
   function handleToggleVisible() {
     setIsVisible(!isVisible)
+  }
+
+  function toggleLearn() {
+    onSave({
+      id: flashCard.id,
+      question: flashCard.question,
+      answer: flashCard.answer,
+      learned: flashCard.learned === 'true' ? 'false' : 'true',
+      createdAt: flashCard.createdAt,
+    })
   }
 
   function handleEdit() {
@@ -253,7 +267,8 @@ function FlashCard({
       id: flashCard.id,
       question: inputQuestionRef.current?.value ?? '',
       answer: inputAnswerRef.current?.value ?? '',
-      updatedAt: new Date().toISOString(),
+      learned: flashCard.learned,
+      createdAt: flashCard.createdAt,
     })
   }
 
@@ -301,7 +316,6 @@ function FlashCard({
 
             <button
               type="button"
-              className="cursor-pointer"
               aria-label={editMode ? 'Save' : 'Edit'}
               onClick={handleEdit}
             >
@@ -310,10 +324,17 @@ function FlashCard({
 
             <button
               type="button"
-              className="cursor-pointer"
-              aria-label="Remove"
-              onClick={handleRemove}
+              onClick={toggleLearn}
+              aria-label={
+                flashCard.learned === 'true'
+                  ? 'Mark as Unlearned'
+                  : 'Mark as Learned'
+              }
             >
+              {flashCard.learned === 'true' ? '🟢' : '🟠'}
+            </button>
+
+            <button type="button" aria-label="Remove" onClick={handleRemove}>
               🗑️
             </button>
           </div>
@@ -325,7 +346,10 @@ function FlashCard({
 
 export default function LetsCodeRoute() {
   //TODO: make this a real Remix Route with loader/action
-  const { flashCards, loading, error, add, update, remove } = useFlashCards()
+  const { flashCards, loading, error, doAdd, doUpdate, doRemove } =
+    useFlashCards()
+
+  const learnedFlashCards = flashCards.filter(flashCard => flashCard.learned)
 
   if (loading) {
     return (
@@ -341,16 +365,19 @@ export default function LetsCodeRoute() {
 
   return (
     <div className="w-[62rem]">
-      <Subtitle className="text-xl m-4">Flash Cards</Subtitle>
+      <Subtitle className="text-xl m-4">
+        {flashCards.length} Flash Cards | {learnedFlashCards.length} Learned
+      </Subtitle>
 
       <ul>
         {flashCards.map(flashCard => {
           return (
             <li key={flashCard.id} className="py-2 hover:bg-gray-100">
               <FlashCard
-                onRemove={id => remove(id)}
+                onRemove={id => doRemove(id)}
                 onSave={newFlashCardValues => {
-                  update(newFlashCardValues)
+                  console.log('newFlashCardValues', newFlashCardValues)
+                  doUpdate(newFlashCardValues)
                 }}
               >
                 {flashCard}
@@ -362,7 +389,7 @@ export default function LetsCodeRoute() {
 
       <NewFlashCard
         onNew={newFlashCard => {
-          add(newFlashCard)
+          doAdd(newFlashCard)
         }}
       />
     </div>
