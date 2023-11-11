@@ -1,0 +1,2 @@
+- Convert to Remix
+- Don't forget to show fetchers and race conditions on toggling "Learned"
