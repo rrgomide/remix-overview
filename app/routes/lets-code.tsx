@@ -3,6 +3,8 @@ import { Subtitle } from '~/components'
 import { SpinnerMessage } from '~/components/SpinnerMessage'
 import { cn, getNewUuid } from '~/utils'
 
+const backendBaseUrl = 'http://localhost:3003'
+
 type FlashCard = {
   id: string
   question: string
@@ -26,7 +28,7 @@ function useFlashCards() {
   React.useEffect(() => {
     setLoading(true)
 
-    fetch('http://localhost:3003/flash-cards')
+    fetch(`${backendBaseUrl}/flash-cards`)
       .then(resource => resource.json())
       .then(jsonFlashCards => {
         setFlashCards(
@@ -46,7 +48,7 @@ function useFlashCards() {
     (newFlashCard: FlashCardWithoutId) => {
       const fullNewFlashCard: FlashCard = { ...newFlashCard, id: getNewUuid() }
 
-      fetch('http://localhost:3003/flash-cards', {
+      fetch(`${backendBaseUrl}/flash-cards`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -65,7 +67,7 @@ function useFlashCards() {
 
   const remove = React.useCallback(
     (flashCardId: string) => {
-      fetch(`http://localhost:3003/flash-cards/${flashCardId}`, {
+      fetch(`${backendBaseUrl}/flash-cards/${flashCardId}`, {
         method: 'DELETE',
       })
         .then(() => {
@@ -82,7 +84,7 @@ function useFlashCards() {
 
   const update = React.useCallback(
     (updatedFlashCard: FlashCardEdit) => {
-      fetch(`http://localhost:3003/flash-cards/${updatedFlashCard.id}`, {
+      fetch(`${backendBaseUrl}/flash-cards/${updatedFlashCard.id}`, {
         method: 'PUT',
         body: JSON.stringify(updatedFlashCard),
       })
