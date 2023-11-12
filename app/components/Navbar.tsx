@@ -12,6 +12,10 @@ const navigation = [
     href: '/lets-code',
   },
   {
+    name: 'Defer',
+    href: '/defer',
+  },
+  {
     name: 'Thanks!',
     href: '/thanks',
   },
