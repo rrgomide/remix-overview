@@ -1,9 +1,16 @@
+import type { MetaFunction } from '@remix-run/node'
 import * as React from 'react'
 import { Subtitle } from '~/components'
 import { SpinnerMessage } from '~/components/SpinnerMessage'
-import { cn, getNewUuid } from '~/utils'
+import { cn, customFetch, getNewUuid, randomDelay } from '~/utils'
+
+export const meta: MetaFunction = () => {
+  return [{ title: `Let's Code!` }]
+}
 
 const backendBaseUrl = 'http://localhost:3003'
+const addDelay = true
+const addError = false
 
 type FlashCard = {
   id: string
@@ -25,8 +32,7 @@ function useFlashCards() {
   React.useEffect(() => {
     setLoading(true)
 
-    fetch(`${backendBaseUrl}/flash-cards`)
-      .then(resource => resource.json())
+    customFetch(`${backendBaseUrl}/flash-cards`, addDelay, false)
       .then(jsonFlashCards => {
         setFlashCards(
           jsonFlashCards.sort((a: FlashCard, b: FlashCard) =>
@@ -52,7 +58,7 @@ function useFlashCards() {
         updatedAt: now,
       }
 
-      fetch(`${backendBaseUrl}/flash-cards`, {
+      customFetch(`${backendBaseUrl}/flash-cards`, addDelay, addError, {
         method: 'POST',
         body: JSON.stringify(fullNewFlashCard),
         headers: {
@@ -71,20 +77,23 @@ function useFlashCards() {
 
   const doUpdate = React.useCallback(
     (updatedFlashCard: FlashCardToEdit) => {
-      console.log('🔥  updatedFlashCard:', updatedFlashCard)
-
       const fullUpdatedFlashCard = {
         ...updatedFlashCard,
         updatedAt: new Date().toISOString(),
       }
 
-      fetch(`${backendBaseUrl}/flash-cards/${updatedFlashCard.id}`, {
-        method: 'PUT',
-        body: JSON.stringify(fullUpdatedFlashCard),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+      customFetch(
+        `${backendBaseUrl}/flash-cards/${fullUpdatedFlashCard.id}`,
+        addDelay,
+        addError,
+        {
+          method: 'PUT',
+          body: JSON.stringify(fullUpdatedFlashCard),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
         .then(() => {
           setFlashCards(
             flashCards.map(currentFlashCard =>
@@ -107,10 +116,19 @@ function useFlashCards() {
 
   const doRemove = React.useCallback(
     (flashCardId: string) => {
-      fetch(`${backendBaseUrl}/flash-cards/${flashCardId}`, {
-        method: 'DELETE',
-      })
-        .then(() => {
+      customFetch(
+        `${backendBaseUrl}/flash-cards/${flashCardId}`,
+        addDelay,
+        addError,
+        {
+          method: 'DELETE',
+        }
+      )
+        .then(async () => {
+          if (addDelay) {
+            await randomDelay()
+          }
+
           setFlashCards(
             flashCards.filter(flashCard => flashCard.id !== flashCardId)
           )
@@ -192,10 +210,10 @@ function NewFlashCard({
         defaultValue=""
       />
 
-      <div className="w-24">
+      <div className="w-32">
         <button
           type="submit"
-          className="w-24 h-8 bg-gray-200 rounded-md px-4 text-sm hover:bg-gray-300"
+          className="w-32 h-8 bg-gray-200 rounded-md px-4 text-sm hover:bg-gray-300"
           aria-label="Add"
         >
           ➕
@@ -303,11 +321,13 @@ function FlashCard({
           </span>
         )}
 
-        <form className="w-24">
-          <div className="w-24 flex flex-row items-center justify-between space-x-2">
+        <form className="w-32">
+          <div className="w-32 flex flex-row items-center justify-between space-x-2">
             <button
               type="button"
-              className={cn(editMode ? 'opacity-0' : '')}
+              className={cn(
+                editMode ? 'opacity-0 pointer-events-none cursor-none' : ''
+              )}
               aria-label={editMode ? '' : isVisible ? 'Hide' : 'Show'}
               onClick={handleToggleVisible}
             >
@@ -349,7 +369,9 @@ export default function LetsCodeRoute() {
   const { flashCards, loading, error, doAdd, doUpdate, doRemove } =
     useFlashCards()
 
-  const learnedFlashCards = flashCards.filter(flashCard => flashCard.learned)
+  const learnedFlashCards = flashCards.filter(
+    flashCard => flashCard.learned === 'true'
+  )
 
   if (loading) {
     return (

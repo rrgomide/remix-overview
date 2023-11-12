@@ -1,5 +1,5 @@
 import { Disclosure } from '@headlessui/react'
-import { useLocation } from '@remix-run/react'
+import { NavLink, useLocation } from '@remix-run/react'
 import { cn } from '~/utils'
 
 const navigation = [
@@ -17,13 +17,7 @@ const navigation = [
   },
 ]
 
-//TODO 1 - Improve Navigation
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function RemixNavigationItem() {
-  return null
-}
-
-function NavigationItem({
+function RemixNavigationItem({
   href,
   isCurrentRoute,
   children,
@@ -33,8 +27,8 @@ function NavigationItem({
   children: string
 }) {
   return (
-    <a
-      href={href}
+    <NavLink
+      to={href}
       className={cn(
         'h-16 inline-flex items-center',
         'border-b-2 px-1 pt-1 text-sm font-medium',
@@ -44,7 +38,7 @@ function NavigationItem({
       )}
     >
       {children}
-    </a>
+    </NavLink>
   )
 }
 
@@ -69,13 +63,13 @@ export function Navbar({ children }: { children: React.ReactNode }) {
                 <div className="flex flex-row items-center justify-start space-x-8 ml-6">
                   {navigation.map(item => {
                     return (
-                      <NavigationItem
+                      <RemixNavigationItem
                         key={item.name}
                         href={item.href}
                         isCurrentRoute={item.href === currentPathname}
                       >
                         {item.name}
-                      </NavigationItem>
+                      </RemixNavigationItem>
                     )
                   })}
                 </div>

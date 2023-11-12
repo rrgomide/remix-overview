@@ -3,10 +3,7 @@ import { DescriptionList, Subtitle } from '~/components'
 import { BorderedContainer } from '~/components/BorderedContainer'
 
 export const meta: MetaFunction = () => {
-  return [
-    { title: 'Remix Demo' },
-    { name: 'description', content: 'Remix Demo' },
-  ]
+  return [{ title: 'Intro' }]
 }
 
 export default function Index() {

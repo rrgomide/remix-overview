@@ -16,6 +16,14 @@ export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
 ]
 
+function NoJavaScript() {
+  return (
+    <div className="absolute top-0 left-0">
+      <img src="/trollface.png" width={100} height={100} alt="Troll Face" />
+    </div>
+  )
+}
+
 export default function App() {
   return (
     <html lang="en" className="h-full">
@@ -27,6 +35,9 @@ export default function App() {
         <Links />
       </head>
       <body className="h-full overflow-y-scroll">
+        <noscript>
+          <NoJavaScript />
+        </noscript>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
