@@ -1,12 +1,20 @@
 {
   "flash-cards": [
     {
+      "id": "a4b0b2a0-5b0a-4b0e-8b0a-5b0a4b0e8b0a",
+      "question": "Who's Dream Theater's guitarrist?",
+      "answer": "🎸 John Petruci",
+      "learned": "false",
+      "createdAt": "2023-10-11T00:00:00.000Z",
+      "updatedAt": "2023-10-11T00:00:00.000Z"
+    },
+    {
       "id": "a039b059-504c-4007-a5b3-9750277b70a6",
       "question": "What's Transatlantic's longest song?",
       "answer": "⏳️ The Whirlwind",
-      "learned": "true",
+      "learned": "false",
       "createdAt": "2020-10-12T00:00:00.000Z",
-      "updatedAt": "2023-11-12T01:38:17.350Z"
+      "updatedAt": "2020-10-12T00:00:00.000Z"
     },
     {
       "id": "ef0d60e8-23c4-45f7-8078-b28c884d9022",
@@ -14,7 +22,7 @@
       "answer": "🥁 Mike Portnoy",
       "learned": "false",
       "createdAt": "2020-10-13T00:00:00.000Z",
-      "updatedAt": "2023-11-12T01:38:24.338Z"
+      "updatedAt": "2020-10-13T00:00:00.000Z"
     },
     {
       "id": "a0e6d190-3d54-4035-b050-b0bcf7d5bf19",
@@ -22,7 +30,7 @@
       "answer": "🎻 Bass",
       "learned": "false",
       "createdAt": "2020-10-14T00:00:00.000Z",
-      "updatedAt": "2023-11-12T01:38:23.977Z"
+      "updatedAt": "2020-10-14T00:00:00.000Z"
     }
   ]
 }
