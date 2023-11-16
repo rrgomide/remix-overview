@@ -42,6 +42,22 @@ const inspirations = [
     name: 'Gustavo Guichard',
     twitter: 'https://twitter.com/gugaguichard',
   },
+  {
+    name: 'Brooks Lybrand',
+    twitter: 'https://twitter.com/BrooksLybrand',
+  },
+  {
+    name: 'Daniel Kanem',
+    twitter: 'https://twitter.com/DanielKanem',
+  },
+  {
+    name: 'Andre Landgraf',
+    twitter: 'https://twitter.com/AndreLandgraf94',
+  },
+  {
+    name: 'Michael Carter',
+    twitter: 'https://twitter.com/kiliman',
+  },
 ].sort((a, b) => a.name.localeCompare(b.name))
 
 export function loader() {
