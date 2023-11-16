@@ -8,8 +8,8 @@ const navigation = [
     href: '/',
   },
   {
-    name: "Let's Code",
-    href: '/lets-code',
+    name: 'CRUD',
+    href: '/crud',
   },
   {
     name: 'Defer',

@@ -2,7 +2,6 @@ import * as React from 'react'
 import {
   type ActionFunctionArgs,
   json,
-  type LoaderFunctionArgs,
   type MetaFunction,
 } from '@remix-run/node'
 import {
@@ -16,7 +15,7 @@ import { Subtitle } from '~/components'
 import { cn, customFetch, getNewUuid } from '~/utils'
 
 const backendBaseUrl = 'http://localhost:3003'
-const addDelay = false
+const addDelay = true
 const addError = false
 
 type FlashCard = {
@@ -32,7 +31,7 @@ export const meta: MetaFunction = () => {
   return [{ title: `Let's Code!` }]
 }
 
-export async function loader(args: LoaderFunctionArgs) {
+export async function loader() {
   const flashCards: FlashCard[] = await customFetch(
     `${backendBaseUrl}/flash-cards`,
     addDelay,
@@ -264,6 +263,10 @@ function FlashCard({ children: flashCard }: { children: FlashCard }) {
 
             <button
               type="submit"
+              onClick={() =>
+                (flashCard.learned =
+                  flashCard.learned === 'true' ? 'false' : 'true')
+              }
               name="intent"
               value="toggle-learn"
               aria-label={
@@ -307,7 +310,7 @@ export function ErrorBoundary() {
   return <pre>{JSON.stringify(routeError, null, 2)}</pre>
 }
 
-export default function LetsCodeRoute() {
+export default function CrudRoute() {
   const { flashCards } = useLoaderData<typeof loader>()
 
   const totalLearned = flashCards.filter(
@@ -320,6 +323,8 @@ export default function LetsCodeRoute() {
         {flashCards.length} Flash Cards | {totalLearned} Learned
       </Subtitle>
 
+      <NewFlashCard />
+
       <ul>
         {flashCards.map(flashCard => {
           return (
@@ -329,8 +334,6 @@ export default function LetsCodeRoute() {
           )
         })}
       </ul>
-
-      <NewFlashCard />
     </div>
   )
 }
