@@ -5,7 +5,7 @@ import { SpinnerMessage } from '~/components/SpinnerMessage'
 import { cn, customFetch, getNewUuid, randomDelay } from '~/utils'
 
 export const meta: MetaFunction = () => {
-  return [{ title: `Let's Code!` }]
+  return [{ title: `CRUD` }]
 }
 
 const backendBaseUrl = 'http://localhost:3003'
@@ -364,7 +364,7 @@ function FlashCard({
   )
 }
 
-export default function LetsCodeRoute() {
+export default function CrudRoute() {
   //TODO: make this a real Remix Route with loader/action
   const { flashCards, loading, error, doAdd, doUpdate, doRemove } =
     useFlashCards()
