@@ -1,3 +1,4 @@
+import * as React from 'react'
 import {
   type ActionFunctionArgs,
   json,
@@ -8,11 +9,11 @@ import {
   Form,
   isRouteErrorResponse,
   useLoaderData,
+  useNavigation,
   useRouteError,
 } from '@remix-run/react'
-import * as React from 'react'
 import { Subtitle } from '~/components'
-import { cn, customFetch } from '~/utils'
+import { cn, customFetch, getNewUuid } from '~/utils'
 
 const backendBaseUrl = 'http://localhost:3003'
 const addDelay = false
@@ -26,9 +27,6 @@ type FlashCard = {
   createdAt: string
   updatedAt: string
 }
-
-type FlashCardToAdd = Omit<FlashCard, 'id' | 'createdAt' | 'updatedAt'>
-// type FlashCardToEdit = Omit<FlashCard, 'updatedAt'>
 
 export const meta: MetaFunction = () => {
   return [{ title: `Let's Code!` }]
@@ -83,8 +81,8 @@ export async function action(args: ActionFunctionArgs) {
     }
 
     case 'update-qa': {
-      const newQuestion = formData.get('input-question')?.toString() ?? ''
-      const newAnswer = formData.get('input-answer')?.toString() ?? ''
+      const updatedQuestion = formData.get('input-question')?.toString() ?? ''
+      const updatedAnswer = formData.get('input-answer')?.toString() ?? ''
 
       await customFetch(
         `${backendBaseUrl}/flash-cards/${id}`,
@@ -93,8 +91,8 @@ export async function action(args: ActionFunctionArgs) {
         {
           method: 'PATCH',
           body: JSON.stringify({
-            question: newQuestion,
-            answer: newAnswer,
+            question: updatedQuestion,
+            answer: updatedAnswer,
             updatedAt: new Date().toISOString(),
           }),
           headers: {
@@ -104,61 +102,74 @@ export async function action(args: ActionFunctionArgs) {
       )
       return json({ ok: true, error: null })
     }
+
+    case 'add': {
+      const newQuestion = formData.get('input-question')?.toString() ?? ''
+      const newAnswer = formData.get('input-answer')?.toString() ?? ''
+      const now = new Date().toISOString()
+
+      await customFetch(`${backendBaseUrl}/flash-cards`, addDelay, addError, {
+        method: 'POST',
+        body: JSON.stringify({
+          id: getNewUuid(),
+          question: newQuestion,
+          answer: newAnswer,
+          learned: 'false',
+          createdAt: now,
+          updatedAt: now,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      return json({ ok: true, error: null })
+    }
   }
 
   return null
 }
 
-function NewFlashCard({
-  onNew,
-}: {
-  onNew: (newFlashCard: FlashCardToAdd) => void
-}) {
+function NewFlashCard() {
   const inputQuestionRef = React.useRef<HTMLInputElement | null>(null)
   const inputAnswerRef = React.useRef<HTMLInputElement | null>(null)
+  const navigation = useNavigation()
+  const isSavingRef = React.useRef(false)
 
-  function handleNew(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
+  React.useEffect(() => {
+    if (isSavingRef.current && navigation.state === 'idle') {
+      isSavingRef.current = false
 
-    const cannotAdd =
-      !inputQuestionRef.current ||
-      !inputAnswerRef.current ||
-      inputQuestionRef.current.value.trim() === '' ||
-      inputAnswerRef.current.value.trim() === ''
+      if (inputAnswerRef.current) {
+        inputAnswerRef.current.value = ''
+      }
 
-    if (cannotAdd) {
-      console.warn('Unable to add flash card')
-      return
+      if (inputQuestionRef.current) {
+        inputQuestionRef.current.value = ''
+        inputQuestionRef.current.focus()
+      }
     }
-
-    onNew({
-      question: inputQuestionRef.current?.value ?? '',
-      answer: inputAnswerRef.current?.value ?? '',
-      learned: 'false',
-    })
-
-    if (inputQuestionRef.current && inputAnswerRef.current) {
-      inputAnswerRef.current.value = ''
-      inputQuestionRef.current.value = ''
-      inputQuestionRef.current.focus()
-    }
-  }
+  }, [navigation.state])
 
   return (
     <div className="p-1 py-2 border border-white">
-      <form onSubmit={handleNew}>
+      <Form method="POST">
         <div className="w-full flex flex-row items-center justify-between space-x-2 select-none">
+          <input type="hidden" name="intent" value="add" />
+
           <input
             autoFocus
+            name="input-question"
             ref={inputQuestionRef}
             className="w-full border p-1"
             type="text"
             placeholder="Question"
-            defaultValue={''}
+            defaultValue=""
           />
 
           <input
             ref={inputAnswerRef}
+            name="input-answer"
             className="w-full border p-1"
             type="text"
             placeholder="Answer"
@@ -167,6 +178,7 @@ function NewFlashCard({
 
           <div className="w-32 flex flex-row items-center justify-start space-x-2">
             <button
+              onClick={() => (isSavingRef.current = true)}
               type="submit"
               className="w-32 h-8 bg-gray-200 rounded-md px-4 text-sm hover:bg-gray-300"
               aria-label="Add"
@@ -175,7 +187,7 @@ function NewFlashCard({
             </button>
           </div>
         </div>
-      </form>
+      </Form>
     </div>
   )
 }
@@ -281,6 +293,20 @@ function FlashCard({ children: flashCard }: { children: FlashCard }) {
   )
 }
 
+export function ErrorBoundary() {
+  const routeError = useRouteError()
+
+  if (isRouteErrorResponse(routeError)) {
+    return (
+      <p className="text-red-700 font-semibold">
+        {routeError.status} ({routeError.statusText}): {routeError.data}
+      </p>
+    )
+  }
+
+  return <pre>{JSON.stringify(routeError, null, 2)}</pre>
+}
+
 export default function LetsCodeRoute() {
   const { flashCards } = useLoaderData<typeof loader>()
 
@@ -304,25 +330,7 @@ export default function LetsCodeRoute() {
         })}
       </ul>
 
-      <NewFlashCard
-        onNew={newFlashCard => {
-          // doAdd(newFlashCard)
-        }}
-      />
+      <NewFlashCard />
     </div>
   )
-}
-
-export function ErrorBoundary() {
-  const routeError = useRouteError()
-
-  if (isRouteErrorResponse(routeError)) {
-    return (
-      <p className="text-red-700 font-semibold">
-        {routeError.status} ({routeError.statusText}): {routeError.data}
-      </p>
-    )
-  }
-
-  return <pre>{JSON.stringify(routeError, null, 2)}</pre>
 }
