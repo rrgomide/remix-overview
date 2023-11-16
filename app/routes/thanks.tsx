@@ -1,6 +1,5 @@
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import React from 'react'
 
 const inspirations = [
   {
