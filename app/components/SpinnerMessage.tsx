@@ -4,10 +4,12 @@ import { cn } from '~/utils'
 //https://github.com/kentcdodds/epic-stack-with-framer-motion/blob/main/app/components/spinner.tsx
 export function Spinner({
   showSpinner,
-  topRightCorner,
+  topRightCorner = false,
+  svgClassName = '',
 }: {
   showSpinner: boolean
   topRightCorner?: boolean
+  svgClassName?: string
 }) {
   return (
     <div
@@ -17,7 +19,7 @@ export function Spinner({
       )}
     >
       <svg
-        className="-ml-1 mr-3 h-5 w-5 animate-spin"
+        className={cn('-ml-1 mr-3 h-5 w-5 animate-spin', svgClassName)}
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -61,7 +63,7 @@ export function SpinnerMessage({
         containerClassName ?? ''
       )}
     >
-      <Spinner showSpinner={showSpinner} />
+      <Spinner showSpinner={showSpinner} topRightCorner={false} />
       <span className={cn('text-xl font-semibold', messageClassName)}>
         {message}
       </span>

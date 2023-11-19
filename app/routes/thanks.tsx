@@ -76,7 +76,13 @@ export default function ThanksRoute() {
       <ul className="mt-8 flex flex-col space-y-2">
         {inspirations.map(({ name, twitter }) => (
           <li key={name} className="hover:text-blue-600">
-            {twitter ? <a href={twitter}>{name}</a> : name}
+            {twitter ? (
+              <a href={twitter} target="_blank" rel="noreferrer">
+                {name}
+              </a>
+            ) : (
+              name
+            )}
           </li>
         ))}
       </ul>

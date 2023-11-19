@@ -9,7 +9,7 @@ export const meta: MetaFunction = () => {
 }
 
 const backendBaseUrl = 'http://localhost:3003'
-const addDelay = true
+const addDelay = false
 const addError = false
 
 type FlashCard = {

@@ -1,4 +1,4 @@
-import { type LoaderFunctionArgs, json } from '@remix-run/node'
+import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 
 const bigDelay = () => new Promise(resolve => setTimeout(resolve, 2_000))
@@ -15,7 +15,7 @@ function Json({ children: data, title }: { children: any; title?: string }) {
   )
 }
 
-export async function loader(args: LoaderFunctionArgs) {
+export async function loader() {
   const bankInfo = await (async () => {
     await bigDelay()
     return {

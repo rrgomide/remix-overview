@@ -1,8 +1,9 @@
 import { Disclosure } from '@headlessui/react'
-import { NavLink, useLocation } from '@remix-run/react'
+import { NavLink, useNavigation } from '@remix-run/react'
 import { cn } from '~/utils'
+import { Spinner } from './SpinnerMessage'
 
-const navigation = [
+const routes = [
   {
     name: 'Intro',
     href: '/',
@@ -21,36 +22,12 @@ const navigation = [
   },
 ]
 
-function RemixNavigationItem({
-  href,
-  isCurrentRoute,
-  children,
-}: {
-  href: string
-  isCurrentRoute: boolean
-  children: string
-}) {
-  return (
-    <NavLink
-      to={href}
-      className={cn(
-        'h-16 inline-flex items-center',
-        'border-b-2 px-1 pt-1 text-sm font-medium',
-        isCurrentRoute
-          ? 'border-indigo-500 text-gray-900'
-          : 'border-transparent text-gray-500, hover:border-gray-300 hover:text-gray-700'
-      )}
-    >
-      {children}
-    </NavLink>
-  )
-}
-
-export function Navbar({ children }: { children: React.ReactNode }) {
-  const { pathname: currentPathname } = useLocation()
+export function Navbar() {
+  const navigation = useNavigation()
+  const isChangingUrl = navigation.state !== 'idle'
 
   return (
-    <div className="min-h-full">
+    <>
       <Disclosure as="nav" className="bg-white">
         <>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -64,26 +41,44 @@ export function Navbar({ children }: { children: React.ReactNode }) {
                   />
                 </div>
 
-                <div className="flex flex-row items-center justify-start space-x-8 ml-6">
-                  {navigation.map(item => {
-                    return (
-                      <RemixNavigationItem
-                        key={item.name}
-                        href={item.href}
-                        isCurrentRoute={item.href === currentPathname}
+                {routes.map(routeItem => {
+                  const isDestinationRoute = routeItem.href.includes(
+                    navigation?.location?.pathname ?? ''
+                  )
+
+                  return (
+                    <div
+                      key={routeItem.name}
+                      className="flex flex-row items-center justify-start space-x-1 ml-6"
+                    >
+                      <Spinner
+                        showSpinner={isChangingUrl && isDestinationRoute}
+                        topRightCorner={false}
+                        svgClassName="mr-1"
+                      />
+
+                      <NavLink
+                        to={routeItem.href}
+                        className={({ isActive }) =>
+                          cn(
+                            'h-16 inline-flex items-center',
+                            'border-b-2 px-1 pt-1 text-sm font-medium',
+                            isActive
+                              ? 'border-indigo-500 text-gray-900'
+                              : 'border-transparent text-gray-500, hover:border-gray-300 hover:text-gray-700'
+                          )
+                        }
                       >
-                        {item.name}
-                      </RemixNavigationItem>
-                    )
-                  })}
-                </div>
+                        {routeItem.name}
+                      </NavLink>
+                    </div>
+                  )
+                })}
               </div>
             </div>
           </div>
         </>
       </Disclosure>
-
-      {children}
-    </div>
+    </>
   )
 }
