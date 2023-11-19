@@ -42,11 +42,10 @@ export default function App() {
         <Scripts />
         <LiveReload />
 
-        <Navbar>
-          <div className="p-2 mt-4 flex flex-col items-center justify-center w-full">
-            <Outlet />
-          </div>
-        </Navbar>
+        <Navbar />
+        <div className="p-12 mt-4 flex flex-row items-center justify-center w-full">
+          <Outlet />
+        </div>
       </body>
     </html>
   )

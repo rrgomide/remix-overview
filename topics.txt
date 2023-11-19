@@ -2,20 +2,29 @@ Topics
 ======
 
 () Show current code briefly
+
 () Show problems
-  () Disable event.preventDefault()
-  () Force delay
-  () Show Race Conditions by clicking fast on "Learn" Toggle
+  () /crud
+    () Disable event.preventDefault()
+    () Force delay
+    () Show Race Conditions by clicking fast on "Learn" Toggle
+
   () Disable JavaScript and reload page
 
 
-() Convert project to Remix
-  () Add loader and action in 'lets-code' route
-  () Add <Form> for creating, updating and deleting cards
-  () Add useFetcher for toggling "Learn"
-  () Add Optimistic UI
-  () Disable JavaScript
-  () Force a super slow API and use defer to mitigate it
-  () Show "thanks" route
+() Convert parts of project to Remix
+  () /crud
+    () Add loader and action in 'lets-code' route
+    () Add <Form> for creating, updating and deleting cards
+    () Add useFetcher for toggling "Learn"
+    () Add Optimistic UI
+    () Disable JavaScript and see what still works
+
+  () /defer
+    () Force a super slow API and use defer to mitigate it
+    () Implement defer
+    () Show differences in calling order
+
+() Show "thanks" route
 
 

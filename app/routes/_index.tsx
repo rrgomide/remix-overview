@@ -8,7 +8,7 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   return (
-    <>
+    <div className="flex flex-col items-center justify-center">
       <Subtitle className="mb-4">Intro</Subtitle>
 
       <BorderedContainer>
@@ -39,6 +39,6 @@ export default function Index() {
           ]}
         />
       </BorderedContainer>
-    </>
+    </div>
   )
 }

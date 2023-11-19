@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "server": "json-server --watch db.json --port 3003"
+    "server": "json-server --watch db.json --port 3003",
+    "restore": "npx ts-node restore.ts"
   },
   "keywords": [],
   "author": "",
