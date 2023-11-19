@@ -36,7 +36,7 @@ function useFlashCards() {
       .then(jsonFlashCards => {
         setFlashCards(
           jsonFlashCards.sort((a: FlashCard, b: FlashCard) =>
-            a.createdAt.localeCompare(b.createdAt)
+            b.updatedAt.localeCompare(a.updatedAt)
           )
         )
         setLoading(false)
@@ -66,7 +66,7 @@ function useFlashCards() {
         },
       })
         .then(() => {
-          setFlashCards([...flashCards, fullNewFlashCard])
+          setFlashCards([fullNewFlashCard, ...flashCards])
         })
         .catch(error => {
           setError((error as Error).message)
@@ -391,6 +391,12 @@ export default function CrudRoute() {
         {flashCards.length} Flash Cards | {learnedFlashCards.length} Learned
       </Subtitle>
 
+      <NewFlashCard
+        onNew={newFlashCard => {
+          doAdd(newFlashCard)
+        }}
+      />
+
       <ul>
         {flashCards.map(flashCard => {
           return (
@@ -408,12 +414,6 @@ export default function CrudRoute() {
           )
         })}
       </ul>
-
-      <NewFlashCard
-        onNew={newFlashCard => {
-          doAdd(newFlashCard)
-        }}
-      />
     </div>
   )
 }
