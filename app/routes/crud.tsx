@@ -36,7 +36,7 @@ function useFlashCards() {
       .then(jsonFlashCards => {
         setFlashCards(
           jsonFlashCards.sort((a: FlashCard, b: FlashCard) =>
-            b.updatedAt.localeCompare(a.updatedAt)
+            b.createdAt.localeCompare(a.createdAt)
           )
         )
         setLoading(false)
