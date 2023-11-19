@@ -37,7 +37,12 @@ export async function loader() {
     addDelay,
     false
   )
-  return json({ flashCards })
+
+  return json({
+    flashCards: flashCards.sort((a, b) =>
+      b.createdAt.localeCompare(a.createdAt)
+    ),
+  })
 }
 
 export async function action(args: ActionFunctionArgs) {
