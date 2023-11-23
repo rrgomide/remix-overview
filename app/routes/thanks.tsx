@@ -1,6 +1,6 @@
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import { GithubIcon } from '~/components/GithubIcon'
+import { GithubIcon } from '~/components'
 import { cn } from '~/utils'
 
 const inspirations = [
