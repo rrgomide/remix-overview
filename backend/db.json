@@ -31,38 +31,6 @@
       "learned": "false",
       "createdAt": "2020-10-14T00:00:00.000Z",
       "updatedAt": "2020-10-14T00:00:00.000Z"
-    },
-    {
-      "id": "58e25243-2b46-47df-8d23-c8bc1f93ae61",
-      "question": "a",
-      "answer": "b",
-      "learned": "false",
-      "createdAt": "2023-11-19T21:18:50.252Z",
-      "updatedAt": "2023-11-19T21:18:50.252Z"
-    },
-    {
-      "id": "69758665-442f-4c9f-b4d8-de255df83b07",
-      "question": "c",
-      "answer": "d",
-      "learned": "false",
-      "createdAt": "2023-11-19T21:21:15.624Z",
-      "updatedAt": "2023-11-19T21:21:15.624Z"
-    },
-    {
-      "id": "c8d5d112-4600-449b-849b-a22969633982",
-      "question": "e",
-      "answer": "f",
-      "learned": "false",
-      "createdAt": "2023-11-19T21:21:49.239Z",
-      "updatedAt": "2023-11-19T21:22:03.665Z"
-    },
-    {
-      "id": "8c53e84a-3c5b-4b4a-95e2-54e224283f57",
-      "question": "g",
-      "answer": "h",
-      "learned": "false",
-      "createdAt": "2023-11-19T21:21:51.871Z",
-      "updatedAt": "2023-11-19T21:22:03.076Z"
     }
   ]
 }
