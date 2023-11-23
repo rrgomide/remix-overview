@@ -1,7 +1,32 @@
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 
-const bigDelay = () => new Promise(resolve => setTimeout(resolve, 2_000))
+const delay = (miliseconds?: number) =>
+  new Promise(resolve => setTimeout(resolve, miliseconds ?? 2_000))
+
+async function getBankInfo() {
+  await delay()
+  return {
+    name: 'Payoneer',
+    balance: 2_000,
+  }
+}
+
+async function getHealthExams() {
+  await delay()
+  return {
+    name: 'Blood Type',
+    result: 'A+',
+  }
+}
+
+async function getWishList() {
+  await delay(100)
+  return {
+    name: 'M3 Pro',
+    price: 3_099,
+  }
+}
 
 function Json({ children: data, title }: { children: any; title?: string }) {
   return (
@@ -16,29 +41,9 @@ function Json({ children: data, title }: { children: any; title?: string }) {
 }
 
 export async function loader() {
-  const bankInfo = await (async () => {
-    await bigDelay()
-    return {
-      name: 'Payoneer',
-      balance: 2_000,
-    }
-  })()
-
-  const healthExams = await (async () => {
-    await bigDelay()
-    return {
-      name: 'Blood Type',
-      result: 'A+',
-    }
-  })()
-
-  const wishList = await (async () => {
-    await bigDelay()
-    return {
-      name: 'M3 Pro',
-      price: '3_099',
-    }
-  })()
+  const bankInfo = await getBankInfo()
+  const healthExams = await getHealthExams()
+  const wishList = await getWishList()
 
   return json({ bankInfo, healthExams, wishList })
 }
