@@ -17,9 +17,8 @@ Adding Remix
 
   () /crud
     () Add loader and action
-    () Add <Form> for creating, updating and deleting cards
-    () Add useFetcher for toggling "Learn"
-    () Add Optimistic UI
+    () Add <Form> for CRUD operations
+    () Add Optimistic UI with useFetcher
     () Disable JavaScript and see what still works
 
   () /defer

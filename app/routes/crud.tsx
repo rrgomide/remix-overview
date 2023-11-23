@@ -5,8 +5,8 @@ import {
   type MetaFunction,
 } from '@remix-run/node'
 import {
-  Form,
   isRouteErrorResponse,
+  useFetcher,
   useLoaderData,
   useNavigation,
   useRouteError,
@@ -134,11 +134,16 @@ export async function action(args: ActionFunctionArgs) {
   return null
 }
 
-function NewFlashCard() {
+function NewFlashCard({
+  onNew,
+}: {
+  onNew: (newData: Omit<FlashCard, 'id'>) => void
+}) {
   const inputQuestionRef = React.useRef<HTMLInputElement | null>(null)
   const inputAnswerRef = React.useRef<HTMLInputElement | null>(null)
   const navigation = useNavigation()
   const isSavingRef = React.useRef(false)
+  const fetcher = useFetcher()
 
   React.useEffect(() => {
     if (isSavingRef.current && navigation.state === 'idle') {
@@ -157,7 +162,7 @@ function NewFlashCard() {
 
   return (
     <div className="p-1 py-2 border border-white">
-      <Form method="POST">
+      <fetcher.Form method="POST">
         <div className="w-full flex flex-row items-center justify-between space-x-2 select-none">
           <input type="hidden" name="intent" value="add" />
 
@@ -182,7 +187,16 @@ function NewFlashCard() {
 
           <div className="w-32 flex flex-row items-center justify-start space-x-2">
             <button
-              onClick={() => (isSavingRef.current = true)}
+              onClick={() => {
+                isSavingRef.current = true
+                onNew({
+                  question: inputQuestionRef.current?.value ?? '',
+                  answer: inputAnswerRef.current?.value ?? '',
+                  learned: 'false',
+                  createdAt: new Date().toISOString(),
+                  updatedAt: new Date().toISOString(),
+                })
+              }}
               type="submit"
               className="w-32 h-8 bg-gray-200 rounded-md px-4 text-sm hover:bg-gray-300"
               aria-label="Add"
@@ -191,17 +205,25 @@ function NewFlashCard() {
             </button>
           </div>
         </div>
-      </Form>
+      </fetcher.Form>
     </div>
   )
 }
 
-function FlashCard({ children: flashCard }: { children: FlashCard }) {
+function FlashCard({
+  children: flashCard,
+  onDelete,
+}: {
+  children: FlashCard
+  onDelete: () => void
+}) {
   const [isVisible, setIsVisible] = React.useState(false)
   const [editMode, setEditMode] = React.useState(false)
   const [localQuestion, setLocalQuestion] = React.useState(flashCard.question)
   const [localAnswer, setLocalAnswer] = React.useState(flashCard.answer)
+  const [localLearned, setLocalLearned] = React.useState(flashCard.learned)
   const inputQuestionRef = React.useRef<HTMLInputElement | null>(null)
+  const fetcher = useFetcher()
 
   React.useEffect(() => {
     if (editMode) {
@@ -220,7 +242,7 @@ function FlashCard({ children: flashCard }: { children: FlashCard }) {
 
   return (
     <div className={cn('p-1 py-2 border border-white hover:border-blue-300')}>
-      <Form id={`qa-form-${flashCard.id}`} method="POST">
+      <fetcher.Form id={`qa-form-${flashCard.id}`} method="POST">
         <div className="w-full flex flex-row items-center justify-between space-x-2 select-none">
           <input
             ref={inputQuestionRef}
@@ -268,19 +290,18 @@ function FlashCard({ children: flashCard }: { children: FlashCard }) {
 
             <button
               type="submit"
-              onClick={() =>
-                (flashCard.learned =
-                  flashCard.learned === 'true' ? 'false' : 'true')
-              }
               name="intent"
               value="toggle-learn"
+              onClick={() =>
+                setLocalLearned(localLearned === 'true' ? 'false' : 'true')
+              }
               aria-label={
-                flashCard.learned === 'true'
+                localLearned === 'true'
                   ? 'Mark as Unlearned'
                   : 'Mark as Learned'
               }
             >
-              {flashCard.learned === 'true' ? '🟢' : '🟠'}
+              {localLearned === 'true' ? '🟢' : '🟠'}
             </button>
 
             <button
@@ -288,6 +309,7 @@ function FlashCard({ children: flashCard }: { children: FlashCard }) {
               name="intent"
               value="delete"
               aria-label="Remove"
+              onClick={onDelete}
             >
               🗑️
             </button>
@@ -296,7 +318,7 @@ function FlashCard({ children: flashCard }: { children: FlashCard }) {
             <input type="hidden" name="learned" value={flashCard.learned} />
           </div>
         </div>
-      </Form>
+      </fetcher.Form>
     </div>
   )
 }
@@ -317,24 +339,59 @@ export function ErrorBoundary() {
 
 export default function CrudRoute() {
   const { flashCards } = useLoaderData<typeof loader>()
+  const [deletedFlashCardIds, setDeletedFlashCardIds] = React.useState<
+    string[]
+  >([])
+  const [newFlashCard, setNewFlashCard] = React.useState<FlashCard | null>(null)
+  const currentCountRef = React.useRef(flashCards.length)
 
-  const totalLearned = flashCards.filter(
+  const filteredFlashCards = (
+    newFlashCard && currentCountRef.current > flashCards.length
+      ? [newFlashCard, ...flashCards]
+      : flashCards
+  ).filter(flashCard => !deletedFlashCardIds.includes(flashCard.id))
+
+  const totalLearned = filteredFlashCards.filter(
     flashCard => flashCard.learned === 'true'
   ).length
 
   return (
     <div className="w-[62rem]">
       <Subtitle className="text-xl m-4">
-        {flashCards.length} Flash Cards | {totalLearned} Learned
+        {filteredFlashCards.length} Flash Cards | {totalLearned} Learned
       </Subtitle>
 
-      <NewFlashCard />
+      <NewFlashCard
+        onNew={newData => {
+          currentCountRef.current = flashCards.length + 1
+
+          setNewFlashCard({
+            id: 'new',
+            question: newData.question,
+            answer: newData.answer,
+            learned: newData.learned,
+            createdAt: newData.createdAt,
+            updatedAt: newData.updatedAt,
+          })
+        }}
+      />
 
       <ul>
-        {flashCards.map(flashCard => {
+        {filteredFlashCards.map(flashCard => {
           return (
-            <li key={flashCard.id}>
-              <FlashCard>{flashCard}</FlashCard>
+            <li key={flashCard.id} id={'li-' + flashCard.id}>
+              <FlashCard
+                onDelete={() => {
+                  setTimeout(() => {
+                    setDeletedFlashCardIds(currentDeleted => [
+                      ...currentDeleted,
+                      flashCard.id,
+                    ])
+                  }, 300)
+                }}
+              >
+                {flashCard}
+              </FlashCard>
             </li>
           )
         })}
