@@ -38,6 +38,7 @@ export default function App() {
         <noscript>
           <NoJavaScript />
         </noscript>
+
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

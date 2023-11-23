@@ -1,20 +1,20 @@
 Topics
 ======
+(x) Show general structure
+(x) Show root route
+(x) Show index route
+(x) /crud
+  (x) Show current code
+  (x) Show problems
+    (x) Disable event.preventDefault()
+    (x) Force delay
+    (x) Show Race Conditions by clicking fast on "Learn" Toggle
+    (x) Disable JavaScript and reload page
+(x) /defer
+  (x) Show current code and problems (too slow)
 
-() Show index route
-() /crud
-  () Show current code
-  () Show problems
-    () Disable event.preventDefault()
-    () Force delay
-    () Show Race Conditions by clicking fast on "Learn" Toggle
-    () Disable JavaScript and reload page
-() /defer
-  () Show current code and problems (too slow)
-
-Adding Remix
-------------
-
+Remix
+=====
   () /crud
     () Add loader and action
     () Add <Form> for CRUD operations
