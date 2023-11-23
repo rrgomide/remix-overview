@@ -6,7 +6,7 @@
       "answer": "",
       "learned": "false",
       "createdAt": "2023-10-11T00:00:00.000Z",
-      "updatedAt": "2023-11-19T20:41:29.998Z"
+      "updatedAt": "2023-11-23T12:05:32.020Z"
     },
     {
       "id": "a039b059-504c-4007-a5b3-9750277b70a6",
@@ -19,10 +19,10 @@
     {
       "id": "ef0d60e8-23c4-45f7-8078-b28c884d9022",
       "question": "Who's in both in NMB and The Winery Dogs?",
-      "answer": "🥁 Mike Portnoy",
-      "learned": "false",
+      "answer": "🥁 Mike Portnoyy",
+      "learned": "true",
       "createdAt": "2020-10-13T00:00:00.000Z",
-      "updatedAt": "2020-10-13T00:00:00.000Z"
+      "updatedAt": "2023-11-23T12:05:45.878Z"
     },
     {
       "id": "a0e6d190-3d54-4035-b050-b0bcf7d5bf19",
@@ -30,23 +30,7 @@
       "answer": "🎻 Bass",
       "learned": "false",
       "createdAt": "2020-10-14T00:00:00.000Z",
-      "updatedAt": "2020-10-14T00:00:00.000Z"
-    },
-    {
-      "id": "af5840ee-3bba-4846-8448-3f404c852a42",
-      "question": "a",
-      "answer": "b",
-      "learned": "false",
-      "createdAt": "2023-11-19T21:23:59.925Z",
-      "updatedAt": "2023-11-19T21:23:59.925Z"
-    },
-    {
-      "id": "d8aa6251-5132-447d-bc55-2aa06140b2fc",
-      "question": "c",
-      "answer": "d",
-      "learned": "false",
-      "createdAt": "2023-11-19T21:25:26.225Z",
-      "updatedAt": "2023-11-19T21:25:26.225Z"
+      "updatedAt": "2023-11-23T12:05:31.619Z"
     }
   ]
 }
